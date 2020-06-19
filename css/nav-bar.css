@@ -1,0 +1,66 @@
+nav {
+    background-color: #00a650;
+    height: 3em;
+    padding: 0;
+    color: white;
+}
+
+.nav-button {
+    color: white;
+    text-decoration: none;
+    float: left;
+    height: 3em;
+    line-height: 3em;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.nav-button:hover {
+    background-color: #007A39;
+}
+
+#nav-selected {
+    font-weight: bold;
+}
+
+#nav-title {
+    float: left;
+    margin: 0 auto;
+    height: 3em;
+    width: calc(100% - 10em);
+}
+
+.nav-label {
+    color: white;
+    text-decoration: none;
+    float: left;
+    height: 3em;
+    line-height: 3em;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.nav-tutorial-number {
+    color: white;
+    text-decoration: none;
+    float: left;
+    height: 3em;
+    line-height: 3em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.nav-tutorial-number:hover {
+    background-color: #007A39;
+}
+
+#nav-tutorial-number-selected {
+    color: #00a650;
+    background-color: white;
+    text-decoration: none;
+    float: left;
+    height: 3em;
+    line-height: 3em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}

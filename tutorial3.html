@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>チュートリアル: ステージ3</title>
+	<script src="./js/libs/JS-Interpreter-master/acorn_interpreter.js"></script>
+	<script src="./js/libs/cannon.js"></script>
+	<script src="./js/libs/three.min.js"></script>
+	<script src="./js/libs/blockly-master/blockly_compressed.js"></script>
+	<script src="./js/libs/blockly-master/blocks_compressed.js"></script>
+	<script src="./js/libs/blockly-master/javascript_compressed.js"></script>
+	<script src="./js/libs/blockly-master/msg/js/ja.js"></script>
+	<script src="./js/common/world.js"></script>
+	<script src="./js/common/program.js"></script>
+	<script src="./js/common/blocks.js"></script>
+	<script src="./js/editor.js"></script>
+
+	<link rel="stylesheet" href="css/common.css">
+	<link rel="stylesheet" href="css/nav-bar.css">
+	<link rel="stylesheet" href="css/buttons.css">
+	<link rel="stylesheet" href="css/layout.css">
+	<link rel="stylesheet" href="css/tab.css">
+	<link rel="stylesheet" href="css/overlay-ui.css">
+</head>
+<body>
+	<!-- #################### ナビゲーションバー #################### -->
+	<nav id="bar">
+		<a class="nav-button" href="">ホーム</a>
+		<div id="nav-title">
+			<a class="nav-label" id="nav-selected">チュートリアル</a>
+			<a class="nav-tutorial-number" href="tutorial1.html">1</a>
+			<a class="nav-tutorial-number" href="tutorial2.html">2</a>
+			<a class="nav-tutorial-number" href="./tutorial3.html" id="nav-tutorial-number-selected">3</a>
+			<a class="nav-tutorial-number" href="tutorial4.html">4</a>
+			<a class="nav-tutorial-number" href="tutorial5.html">5</a>
+			<a class="nav-tutorial-number" href="tutorial6.html">6</a>
+			<a class="nav-tutorial-number" href="tutorial7.html">7</a>
+			<a class="nav-tutorial-number" href="tutorial8.html">8</a>
+			<a class="nav-tutorial-number" href="tutorial9.html">9</a>
+
+			<a class="nav-button" href="battle.html">対戦モード</a>
+		</div>
+	</nav>
+
+	<div id="layout-container">
+		<!-- #################### 画面左側エリア #################### -->
+		<div class="layout-item">
+			<!-- ========== 実行・停止ボタン ========== -->
+			<div id="control-buttons">
+				<img src="./img/run.png" onclick="onRunClicked()" id="button-run" alt="実行ボタン">
+				<img src="./img/stop.png" onclick="onStopClicked()" id="button-stop" alt="停止ボタン">
+			</div>
+
+			<!-- ========== プログラムエディタ ========== -->
+			<div class="tab-container">
+				<!-- ブロック -->
+				<input id="TAB1-01" type="radio" name="TAB1" class="tab-switch" checked="checked"/>
+				<label class="tab-label" for="TAB1-01">■ ブロック</label>
+				<div class="tab-item">
+					<div id="blocklyEditor1_Tutorial"></div>
+				</div>
+
+				<!-- テキスト -->
+				<input id="TAB1-02" type="radio" name="TAB1" class="tab-switch" onclick="onCodeTabClicked(1)"/>
+				<label class="tab-label" for="TAB1-02">&lt;/&gt; JavaScript</label>
+				<div class="tab-item">
+					<textarea id="textEditor1_Tutorial"></textarea>
+				</div>
+			</div>
+		</div>
+
+		<!-- #################### 画面右側エリア #################### -->
+		<div class="layout-item">
+			<!-- ========== 対戦画面 ========== -->
+			<canvas id="battle-canvas"></canvas>
+
+			<!-- ========== 対戦画面UI ========== -->
+			<div class="overlay-ui">
+				<!-- HPゲージ -->
+				<div class="ui-hp">
+					<div>Player1:　</div>
+					<div id="hp1-border">
+						<div id="hp1-gauge"></div>
+					</div>
+				</div>
+
+				<!-- オーバーレイ説明UI -->
+				<div class="ui-panel" id="tutorial-background">
+					<div class="ui-panel-label">
+						<h1 style="text-align: center;color: #00a650">ステージ3　障害物を避けよう！</h1>
+						<h3 style="text-align: center">ミッション目的: ロボットをゴールに導く</h3>
+
+						<div class="ui-scroll-box">
+							<p>
+								　今度はフィールド中央に大きな障害物が置いてあります。ゴールを目指すには複数の動きを組み合わせてこの障害物を避けなくてはなりません。
+							</p>
+
+							<h3> ヒント </h3>
+							<ul>
+								<li>
+									プログラムの命令ブロックは縦に複数個繋げることができます。
+								</li>
+								<li>
+									「<span style="color:#5e68a1;font-weight: bold">待機</span>」ブロックを使うと指定した秒数だけプログラムを止めることができます。
+								</li>
+							</ul>
+						</div>
+						<div class="button-next button" onclick="onCloseClicked()">閉じる</div>
+					</div>
+				</div>
+
+				<!-- オーバーレイ結果UI -->
+				<div class="ui-panel" id="result-background">
+					<div class="ui-panel-label" style="text-align: center">
+						<h1 id="result_title" style="color: #00a650">対戦結果</h1>
+						<p id="time">タイム: 秒</p>
+						<p id="block_count">使用ブロック数: 個</p>
+						<p>
+							<a class="button-cancel button" href="">もう一度</a>
+							<a class="button-next button" href="tutorial4.html">次へ→</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<xml id="toolbox" style="display: none">
+		<category name="ロボット移動">
+			<block type="move_angle">
+				<value name="angle">
+					<block type="math_number">
+						<field name="NUM">0</field>
+					</block>
+				</value>
+			</block>
+			<block type="stop">
+			</block>
+			<block type="wait_s">
+				<value name="time">
+					<block type="math_number">
+						<field name="NUM">1</field>
+					</block>
+				</value>
+			</block>
+			<block type="wait_ms">
+				<value name="time">
+					<block type="math_number">
+						<field name="NUM">1000</field>
+					</block>
+				</value>
+			</block>
+		</category>
+	</xml>
+
+	<script>
+		/*
+		three.js
+		Copyright (C) 2010-2020 three.js authors
+		Released under the MIT license
+		https://github.com/mrdoob/three.js/blob/dev/LICENSE
+
+		cannon.js
+		Copyright (C) 2015 cannon.js Authors
+		Released under the MIT license
+		https://github.com/schteppe/cannon.js/blob/master/LICENSE
+
+		blockly
+		Copyright (C) Blockly
+		Released under the Apache 2.0 license
+		https://github.com/google/blockly/blob/master/LICENSE
+
+		JS-Interpreter
+		Copyright (C) 2013 Google Inc.
+		Released under the Apache 2.0 license
+		https://github.com/NeilFraser/JS-Interpreter/blob/master/LICENSE
+		 */
+
+		let world = null;
+		let robot1 = null;
+		let startTime = null;
+
+
+		// #################### 全体初期化 ####################
+		window.addEventListener ("load", () => {
+			// ワールドを作成
+			world = new GameWorld (640, 480);
+
+			// オブジェクト生成
+			robot1 = new Robot (-35, 10, 35, 0x666666);
+
+			// エリア生成
+			const area = new Area (38, 10, -38, 20, 20, 20, 0x80FF80, world);
+			area.addTargetObject (robot1);
+			area.addEnterEventListener ((robot) => {
+				world.stop ();
+
+				// タイムを求める
+				const seconds = Math.floor ((new Date () - startTime) / 1000);
+				// 使用ブロック数を求める
+				const blockCount = editor.getBlockCount (1);
+
+				// スコア画面に反映
+				document.getElementById ("result_title").innerText = "ステージ3 Clear!";
+				document.getElementById ("time").innerText = "タイム: " + seconds + "秒";
+				document.getElementById ("block_count").innerText = "使用ブロック数: " + blockCount + "個";
+
+				window.setTimeout (() => {
+					document.getElementById ("result-background").style.display = "block";
+				}, 500);
+			});
+
+			const field = new Field (0, 0, 0, 100, 100, 0x734229);
+
+			const walls = [
+				new Wall (0, 6, 50, 100, 12, 2, 0xAC623E),
+				new Wall (0, 6, -50, 100, 12, 2, 0xAC623E),
+				new Wall (50, 6, 0, 2, 12, 100, 0xAC623E),
+				new Wall (-50, 6, 0, 2, 12, 100, 0xAC623E),
+			];
+
+			const objects = [
+				new Wall (0, 6, 0, 40, 12, 40, 0xcccccc)
+			];
+
+			world.appendRobot (robot1);
+			world.appendField (field);
+			world.appendArea (area);
+			for (const wall of walls) {
+				world.appendWall (wall);
+			}
+			for (const object of objects) {
+				world.appendWall (object);
+			}
+
+			tick ();
+
+			function tick () {
+				world.updateWorld ();
+				world.updateUI (robot1, null);
+
+				requestAnimationFrame (tick);
+			}
+
+			// チュートリアルを開始
+			document.getElementById ("tutorial-background").style.display = "block";
+		});
+
+		function onCloseClicked () {
+			document.getElementById ("tutorial-background").style.display = "none";
+		}
+
+		function onCodeTabClicked (editorNumber, textEditorID) {
+			editor.blockToCodeEditor (editorNumber, textEditorID);
+		}
+
+		// #############################################
+
+
+		// #################### エディタ初期化 ####################
+		const editor = new Editor ();
+		editor.createEditor ("blocklyEditor1_Tutorial", "textEditor1_Tutorial");
+
+		function onRunClicked () {
+			let code = "";
+			if (document.getElementById ("TAB1-02").checked) {
+				code = editor.textEditors[0].value;
+			} else {
+				code = editor.blockToCodeEditor (1);
+			}
+
+			editor.run (world, robot1, null, code, null);
+			startTime = new Date ();
+		}
+
+		function onStopClicked () {
+			editor.stop (world);
+		}
+
+		// #############################################
+
+
+		// #################### テスト用キー受付 ####################
+		document.addEventListener ('keydown', (event) => {
+			let x, z;
+			switch (event.key) {
+				case "w":
+					z = -50;
+					break;
+				case "s":
+					z = 50;
+					break;
+				case "a":
+					x = -50;
+					break;
+				case "d":
+					x = 50;
+					break;
+			}
+			robot1.addForce (x, 0, z);
+		});
+		// #############################################
+	</script>
+</body>
+</html>

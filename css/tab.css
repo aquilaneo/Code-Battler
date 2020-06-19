@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+.tab-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tab-label {
+    color: gray;
+    background: lightgray;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    margin-left: 0.5em;
+    padding: 0.4em 1.4em;
+    order: -1;
+}
+
+.tab-label:hover {
+    color: white;
+    background: #9DC4AF;
+    cursor: pointer;
+}
+
+.tab-item {
+    border: solid thin #00a650;
+    display: none;
+}
+
+.tab-switch:checked + .tab-label {
+    color: white;
+    background: #00a650;
+}
+
+.tab-switch:checked + .tab-label + .tab-item {
+    display: block;
+}
+
+.tab-switch {
+    display: none;
+}

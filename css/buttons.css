@@ -1,0 +1,68 @@
+@charset "UTF-8";
+
+#control-buttons {
+    text-align: center;
+    margin-top: 0.5em;
+    margin-bottom: 0.2em;
+}
+
+#button-run {
+    border: none;
+    border-radius: 8px;
+    padding: 0.5em;
+    margin: 0;
+    width: 1.5em;
+    cursor: pointer;
+}
+
+#button-run:hover {
+    background-color: rgba(128, 255, 128, 0.5);
+}
+
+#button-run:active {
+    background-color: rgba(64, 196, 64, 0.5);
+}
+
+#button-stop {
+    border: none;
+    border-radius: 8px;
+    padding: 0.5em;
+    margin: 0;
+    width: 1.5em;
+    cursor: pointer;
+}
+
+#button-stop:hover {
+    background-color: rgba(255, 128, 128, 0.5);
+}
+
+#button-stop:active {
+    background-color: rgba(196, 64, 64, 0.5);
+}
+
+.button {
+    margin: 2em;
+    padding: 0.8em;
+    border-radius: 4px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+}
+
+.button-cancel {
+    background-color: lightgray;
+    color: black;
+}
+
+.button-cancel:hover {
+    box-shadow: 0 0 10px lightgray;
+}
+
+.button-next {
+    background-color: #00a650;
+    color: white;
+}
+
+.button-next:hover {
+    box-shadow: 0 0 10px #00a650;
+}
